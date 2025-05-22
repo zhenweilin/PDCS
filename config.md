@@ -20,6 +20,10 @@ generate_rss = true
 website_title = "PDCS"
 website_descr = "A Primal-Dual Large-Scale Conic Programming Solver with GPU Enhancements"
 website_url   = "https://zhenweilin.github.io/PDCS/"
+
+# Franklin specific settings
+format = "html"
+strict = true
 +++
 
 <!--
