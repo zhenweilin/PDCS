@@ -75,3 +75,7 @@ where $\lambda=c-G^{\top}y=[\lambda_{1}^{\top},\lambda_{2}^{\top}]^{\top},\lambd
 
 ## LICENSE
 PDCS are licensed under the Apache License 2.0
+
+
+
+<!-- Notify how to update the content modify the corresponding what you want to modify and in julia run ```using Franklin; serve(single=true, clear=true); publish();``` -->
