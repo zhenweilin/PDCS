@@ -11,8 +11,9 @@ pages:
       Pkg.add(PackageSpec(name="Franklin", version="0.10.69"));
       using NodeJS; run(`$(npm_cmd()) install highlight.js`);
       using Franklin;
-      serve(single=true, clear=true);
-      optimize(minify=true)'
+      clear();
+      serve(single=true);
+      optimize(minify=true, prerender=true)'
     - mv __site public
   artifacts:
     paths:

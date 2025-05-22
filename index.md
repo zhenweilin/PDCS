@@ -1,7 +1,9 @@
 @def title = "PDCS"
 @def tags = ["syntax", "code"]
+@def hascode = true
+@def mintoclevel = 2
 
-\tableofcontents
+{{toc}}
 
 ![](/assets/PDCS.png)
 
