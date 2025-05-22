@@ -3,7 +3,7 @@
 @def hascode = true
 @def mintoclevel = 2
 
-{{toc}}
+\tableofcontents
 
 ![](/assets/PDCS.png)
 

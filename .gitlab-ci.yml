@@ -12,8 +12,7 @@ pages:
       using NodeJS; run(`$(npm_cmd()) install highlight.js`);
       using Franklin;
       clear();
-      serve(single=true);
-      optimize(minify=true, prerender=true)'
+      optimize(minify=true)'
     - mv __site public
   artifacts:
     paths:
