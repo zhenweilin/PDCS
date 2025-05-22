@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/styles/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Franklin Example</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">PDCS</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/menu1/">Examples</a></li>
+    <li><a href="/menu2/">Parameters</a></li>
+    <li><a href="/menu3/">Algorithm</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><div class="franklin-toc"><ol><li><a href="#overview">Overview</a></li><li><a href="#features">Features</a></li><li><a href="#installation">Installation</a></li><li><a href="#usage">Usage</a></li><li><a href="#convergence_criteria">Convergence Criteria</a></li><li><a href="#paper">Paper</a></li><li><a href="#license">LICENSE</a></li></ol></div>
+<p><img src="/assets/PDCS.png" alt="" /></p>
+<h2 id="overview"><a href="#overview" class="header-anchor">Overview</a></h2>
+<p>This project implements the algorithm for solving conic optimization problems of the form:</p>
+\[\min_{x=(x_1,x_2),x_1\in \mathbb{R}^{n_1}, x_2\in \mathbb{R}^{n_2}} c^{\top} x\ \  \text{s.t.} Gx-h\in \mathcal{K}_d, l\leq x_1\leq u, x_2 \in \mathcal{K}_p,\]
+<p>where \(\mathcal{K}_G\) is a closed convex cone, and \(\mathcal{K}_x\) is a closed convex cone.</p>
+<h2 id="features"><a href="#features" class="header-anchor">Features</a></h2>
+<ul>
+<li><p><strong>Multiple Cone Types Support</strong>:</p>
+<ul>
+<li><p>Second-order cone &#40;recommended but not the rsoc&#41;</p>
+</li>
+<li><p>Rotated second-order cone</p>
+</li>
+<li><p>Exponential cone and dual exponential cone</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="installation"><a href="#installation" class="header-anchor">Installation</a></h2>
+<pre><code class="language-bash">git clone https://github.com/ZikaiXiong/PDCS.git
+cd PDCS
+cd src/pdcs_gpu/cuda
+make # compile the cuda code, default ARCH &#61; sm_90
+cd ../../..</code></pre>
+<h2 id="usage"><a href="#usage" class="header-anchor">Usage</a></h2>
+<pre><code class="language-julia">julia ./test/env.jl # install the dependencies
+julia ./test/test_exp.jl # test the exponential cone cpu
+julia ./test/test_soc.jl # test the second-order cone cpu
+julia ./test/test_rsoc.jl # test the rotated second-order cone cpu
+
+julia ./test/test_exp_gpu.jl # test the exponential cone gpu
+julia ./test/test_soc_gpu.jl # test the second-order cone gpu
+julia ./test/test_rsoc_gpu.jl # test the rotated second-order cone gpu</code></pre>
+<h2 id="convergence_criteria"><a href="#convergence_criteria" class="header-anchor">Convergence Criteria</a></h2>
+<p>Three criteria are considered for the performance:</p>
+<ol>
+<li><p><strong>Primal infeasibility</strong>:</p>
+</li>
+</ol>
+\[\frac{\|(Gx - h) - \text{proj}_{\mathcal{K}_G}(Gx - h)\|_{\infty}}{1+\max(\|h\|_{\infty}, \|Gx\|_{\infty}, \|\text{proj}_{\mathcal{K}_G}(Gx - h)\|_{\infty})}\]
+<ol start="2">
+<li><p><strong>Dual infeasibility</strong>:</p>
+</li>
+</ol>
+\[\frac{\max\{\|\lambda_1-\text{proj}_{\Lambda_1}(\lambda_1)\|_{\infty},\|\lambda_2-\text{proj}_{\mathcal{K}_x^*}(\lambda_2)\|_{\infty}\}}{1+\max\{\|c\|_{\infty},\|G^\top y\|_{\infty}\}}\]
+<ol start="3">
+<li><p><strong>Objective value accuracy</strong>:</p>
+</li>
+</ol>
+\[\frac{|c^{\top}x-(y^{\top}h+l^{\top}\lambda_{1}^{+}+u^{\top}\lambda_{1}^{-})|}{1+\max\{|c^{\top}x|, |y^{\top}h+l^{\top}\lambda_{1}^{+}+u^{\top}\lambda_{1}^{-}|\}}\]
+<p>where \(\lambda=c-G^{\top}y=[\lambda_{1}^{\top},\lambda_{2}^{\top}]^{\top},\lambda_1\in \Lambda_1 \subseteq \mathbb{R}^{n_1}, \lambda_2\in \mathbb{R}^{n_2}\).</p>
+<h2 id="paper"><a href="#paper" class="header-anchor">Paper</a></h2>
+<pre><code class="language-julia">@misc&#123;PDCS,
+      title&#61;&#123;PDCS: A Primal-Dual Large-Scale Conic Programming Solver with GPU Enhancements&#125;, 
+      author&#61;&#123;Zhenwei Lin and Zikai Xiong and Dongdong Ge and Yinyu Ye&#125;,
+      year&#61;&#123;2025&#125;,
+      eprint&#61;&#123;2505.00311&#125;,
+      archivePrefix&#61;&#123;arXiv&#125;,
+      primaryClass&#61;&#123;math.OC&#125;,
+      url&#61;&#123;https://arxiv.org/abs/2505.00311&#125;, 
+&#125;</code></pre>
+<h2 id="license"><a href="#license" class="header-anchor">LICENSE</a></h2>
+<p>PDCS are licensed under the Apache License 2.0</p>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> Zhenwei Lin. Last modified: May 22, 2025.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/contrib/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.min.js"></script>
+<script>hljs.highlightAll();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>
