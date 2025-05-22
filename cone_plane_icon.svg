@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Blue plane -->
+  <polygon points="30,90 170,70 150,130 50,150" fill="#4A90E2" stroke="#1A1B3D" stroke-width="10"/>
+  <!-- Purple cone side -->
+  <path d="M40,50 L80,160 L120,160 L160,50 Z" fill="#8E44AD" stroke="#1A1B3D" stroke-width="10"/>
+  <!-- Purple cone top ellipse -->
+  <ellipse cx="100" cy="50" rx="60" ry="30" fill="#8E44AD" stroke="#1A1B3D" stroke-width="10"/>
+</svg>
