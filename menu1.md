@@ -14,7 +14,7 @@ tags = ["syntax", "code"]
 
 ## examples here
 
-### second order cone example
+### second order cone examples
 
 
-### exponential cone example
+### exponential cone examples
