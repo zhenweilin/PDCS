@@ -1,4 +1,4 @@
-image: julia:1.6
+image: julia:1.9
 
 before_script:
   - apt-get -qq update; apt-get -y install git python3-dev python3-pip
@@ -8,6 +8,7 @@ pages:
   stage: deploy
   script:
     - julia --project=@. -e 'import Pkg; Pkg.instantiate();
+      Pkg.add(PackageSpec(name="Franklin", version="0.10.69"));
       using NodeJS; run(`$(npm_cmd()) install highlight.js`);
       using Franklin;
       serve(single=true, clear=true);
