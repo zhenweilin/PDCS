@@ -1,11 +1,9 @@
-@def title = "Franklin Example"
+@def title = "PDCS"
 @def tags = ["syntax", "code"]
-
 
 \tableofcontents
 
 ![](/assets/PDCS.png)
-
 
 ## Overview
 
