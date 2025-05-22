@@ -12,4 +12,9 @@ tags = ["syntax", "code"]
 
 \toc
 
-## example here
+## examples here
+
+### second order cone example
+
+
+### exponential cone example
