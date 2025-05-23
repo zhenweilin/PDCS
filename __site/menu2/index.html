@@ -28,12 +28,207 @@
 
 <!-- Content appended here -->
 <div class="franklin-content">
+<div class="franklin-toc"><ol><li><a href="#problem_data">Problem Data</a></li><li><a href="#cone_specifications">Cone Specifications</a></li><li><a href="#bounds_and_scaling">Bounds and Scaling</a></li><li><a href="#solution_initialization">Solution Initialization</a></li><li><a href="#algorithm_control">Algorithm Control</a></li><li><a href="#termination_criteria">Termination Criteria</a></li><li><a href="#monitoring_and_output">Monitoring and Output</a></li><li><a href="#api_of_function_pdcs_gpurpdhg_gpu_solve">API of function <code>PDCS_GPU.rpdhg_gpu_solve</code></a></li></ol></div>
 <h1 id="parameters"><a href="#parameters" class="header-anchor">Parameters</a></h1>
-<div class="franklin-toc"><ol><li><a href="#parameters_here">parameters here</a></li></ol></div>
-<h2 id="parameters_here"><a href="#parameters_here" class="header-anchor">parameters here</a></h2>
-<p>test</p>
+<h2 id="problem_data"><a href="#problem_data" class="header-anchor">Problem Data</a></h2>
+<ul>
+<li><p><code>n</code>: Number of variables</p>
+</li>
+<li><p><code>m</code>: Number of constraints</p>
+</li>
+<li><p><code>nb</code>: Number of box constraints</p>
+</li>
+<li><p><code>c_cpu</code>: Cost vector of length <code>n</code></p>
+</li>
+<li><p><code>G_cpu</code>: Constraint matrix with <code>m</code> rows and <code>n</code> columns</p>
+</li>
+<li><p><code>h_cpu</code>: Right-hand side vector of length <code>m</code></p>
+</li>
+</ul>
+<h2 id="cone_specifications"><a href="#cone_specifications" class="header-anchor">Cone Specifications</a></h2>
+<ul>
+<li><p><code>mGzero</code>: Number of zero constraints</p>
+</li>
+<li><p><code>mGnonnegative</code>: Number of nonnegative constraints</p>
+</li>
+<li><p><code>socG</code>: Vector of sizes for Second-Order Cones &#40;SOC&#41;</p>
+</li>
+<li><p><code>rsocG</code>: Vector of sizes for Rotated Second-Order Cones &#40;RSOC&#41;</p>
+</li>
+<li><p><code>expG</code>: Number of exponential cones</p>
+</li>
+<li><p><code>dual_expG</code>: Number of dual exponential cones</p>
+</li>
+<li><p><code>soc_x</code>: Indices of variables in <code>x</code> that belong to SOCs</p>
+</li>
+<li><p><code>rsoc_x</code>: Indices of variables in <code>x</code> that belong to RSOCs</p>
+</li>
+<li><p><code>exp_x</code>: Number of exponential cones in variables, default is <code>0</code></p>
+</li>
+<li><p><code>dual_exp_x</code>: Number of dual exponential cones in variables, default is <code>0</code></p>
+</li>
+</ul>
+<h2 id="bounds_and_scaling"><a href="#bounds_and_scaling" class="header-anchor">Bounds and Scaling</a></h2>
+<ul>
+<li><p><code>bl_cpu</code>: Lower bounds vector for box constraints &#40;length <code>nb</code>&#41;</p>
+</li>
+<li><p><code>bu_cpu</code>: Upper bounds vector for box constraints &#40;length <code>nb</code>&#41;</p>
+</li>
+<li><p><code>Dl_cpu</code>: Constraint scaling vector &#40;length <code>m</code>&#41;, default is <code>ones&#40;m&#41;</code></p>
+</li>
+<li><p><code>Dr_cpu</code>: Variable scaling vector &#40;length <code>n</code>&#41;, default is <code>ones&#40;n&#41;</code></p>
+</li>
+<li><p><code>rescaling_method</code>: Data rescaling method, default is <code>:ruiz_pock_chambolle</code></p>
+<ul>
+<li><p><code>:none</code>: No rescaling</p>
+</li>
+<li><p><code>:ruiz_pock_chambolle</code>: Ruiz-Pock-Chambolle rescaling</p>
+</li>
+<li><p><code>:ruiz_pock_more</code>: Ruiz-Pock-More rescaling</p>
+</li>
+</ul>
+</li>
+<li><p><code>use_preconditioner</code>: Whether to use preconditioner, default is <code>true</code></p>
+</li>
+</ul>
+<h2 id="solution_initialization"><a href="#solution_initialization" class="header-anchor">Solution Initialization</a></h2>
+<ul>
+<li><p><code>primal_sol_cpu</code>: Initial primal solution vector, default is <code>zeros&#40;n&#41;</code></p>
+</li>
+<li><p><code>dual_sol_cpu</code>: Initial dual solution vector, default is <code>zeros&#40;m&#41;</code></p>
+</li>
+<li><p><code>warm_start</code>: Enable warm start, default is <code>false</code></p>
+<ul>
+<li><p>To successfully warmstart the solver <code>primal_sol</code>, <code>dual_sol</code> and <code>slack</code> must all be provided <strong>and</strong> <code>warm_start</code> option must be set to <code>true</code>.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="algorithm_control"><a href="#algorithm_control" class="header-anchor">Algorithm Control</a></h2>
+<ul>
+<li><p><code>max_outer_iter</code>: Maximum number of outer iterations, default is <code>10000</code></p>
+</li>
+<li><p><code>max_inner_iter</code>: Maximum number of inner iterations, default is <code>500000</code></p>
+</li>
+<li><p><code>method</code>: Solution method, default is <code>:average</code>. We will frame this setting in the future version</p>
+<ul>
+<li><p><code>:average</code>: average &#43; reflection &#43; halpern</p>
+</li>
+<li><p><code>:halpern</code>: Halpern method</p>
+</li>
+<li><p><code>:average_no_restart</code>: Average method without restart</p>
+</li>
+<li><p><code>:halpern_no_restart</code>: Halpern method without restart</p>
+</li>
+</ul>
+</li>
+<li><p><code>use_adaptive_restart</code>: Whether to use adaptive restart, default is <code>true</code></p>
+</li>
+<li><p><code>use_adaptive_step_size_weight</code>: Whether to use adaptive step size weight, default is <code>true</code></p>
+</li>
+<li><p><code>use_aggressive</code>: Whether to use aggressive mode, default is <code>true</code></p>
+</li>
+<li><p><code>use_accelerated</code>: Whether to use acceleration, default is <code>false</code>, <code>true</code> is not recommend in author&#39;s experience, it will be removed in future version</p>
+</li>
+<li><p><code>use_resolving</code>: Whether to use resolving, default is <code>true</code>. If the normalized duality gap is too negative, then recover initial constraint matrix to let rescaling not work and run</p>
+</li>
+<li><p><code>use_kkt_restart</code>: Whether to use KKT restart, default is <code>false</code>, it means kkt restart won&#39;t check from the start, but it will check if normalized duality gap does not work</p>
+</li>
+<li><p><code>kkt_restart_freq</code>: Frequency of KKT restart check, default is <code>2000</code></p>
+</li>
+<li><p><code>use_duality_gap_restart</code>: Whether to use duality gap restart, default is <code>true</code></p>
+</li>
+<li><p><code>duality_gap_restart_freq</code>: Frequency of duality gap restart check, default is <code>2000</code></p>
+</li>
+</ul>
+<h2 id="termination_criteria"><a href="#termination_criteria" class="header-anchor">Termination Criteria</a></h2>
+<ul>
+<li><p><code>abs_tol</code>: Absolute tolerance, default is <code>1e-6</code></p>
+</li>
+<li><p><code>rel_tol</code>: Relative tolerance, default is <code>1e-6</code></p>
+</li>
+<li><p><code>eps_primal_infeasible_low_acc</code>: Low accuracy primal infeasibility tolerance, default is <code>1e-12</code></p>
+</li>
+<li><p><code>eps_dual_infeasible_low_acc</code>: Low accuracy dual infeasibility tolerance, default is <code>1e-12</code></p>
+</li>
+<li><p><code>eps_primal_infeasible_high_acc</code>: High accuracy primal infeasibility tolerance, default is <code>1e-16</code></p>
+</li>
+<li><p><code>eps_dual_infeasible_high_acc</code>: High accuracy dual infeasibility tolerance, default is <code>1e-16</code></p>
+</li>
+</ul>
+<h2 id="monitoring_and_output"><a href="#monitoring_and_output" class="header-anchor">Monitoring and Output</a></h2>
+<ul>
+<li><p><code>print_freq</code>: Information printing frequency, default is <code>2000</code></p>
+</li>
+<li><p><code>check_terminate_freq</code>: Termination criteria checking frequency, default is <code>2000</code></p>
+</li>
+<li><p><code>verbose</code>: Verbosity level, default is <code>1</code></p>
+<ul>
+<li><p><code>0</code>: Minimal output</p>
+</li>
+<li><p><code>1</code>: Standard output</p>
+</li>
+<li><p><code>2</code>: Detailed output</p>
+</li>
+</ul>
+</li>
+<li><p><code>time_limit</code>: Maximum solver runtime, default is <code>Inf</code></p>
+</li>
+<li><p><code>logfile_name</code>: Name of the log file, default is <code>nothing</code></p>
+</li>
+</ul>
+<h2 id="api_of_function_pdcs_gpurpdhg_gpu_solve"><a href="#api_of_function_pdcs_gpurpdhg_gpu_solve" class="header-anchor">API of function <code>PDCS_GPU.rpdhg_gpu_solve</code></a></h2>
+<pre><code class="language-julia">function rpdhg_gpu_solve&#40;;
+    n::Integer,
+    m::Integer,
+    nb::Integer,
+    c_cpu::Vector&#123;rpdhg_float&#125;,
+    G_cpu::AbstractMatrix&#123;rpdhg_float&#125;,
+    h_cpu::hType,
+    mGzero::Integer, # m of Q for zero cone
+    mGnonnegative::Integer, # m of Q for positive cone
+    socG::Vector&#123;&lt;:Integer&#125;,
+    rsocG::Vector&#123;&lt;:Integer&#125;,
+    expG::Integer,
+    dual_expG::Integer,
+    bl_cpu::Vector&#123;rpdhg_float&#125;,
+    bu_cpu::Vector&#123;rpdhg_float&#125;,
+    soc_x::Vector&#123;&lt;:Integer&#125;,
+    rsoc_x::Vector&#123;&lt;:Integer&#125;,
+    exp_x::Integer &#61; 0,
+    dual_exp_x::Integer &#61; 0,
+    Dl_cpu::Vector&#123;rpdhg_float&#125; &#61; ones&#40;m&#41;,
+    Dr_cpu::Vector&#123;rpdhg_float&#125; &#61; ones&#40;n&#41;,
+    rescaling_method::Symbol &#61; :ruiz_pock_chambolle,
+    use_preconditioner::Bool &#61; true,
+    use_adaptive_restart::Bool &#61; true,
+    use_adaptive_step_size_weight::Bool &#61; true,
+    use_aggressive::Bool &#61; true,
+    use_accelerated::Bool &#61; false,
+    use_resolving::Bool &#61; true,
+    primal_sol_cpu::Vector&#123;rpdhg_float&#125; &#61; zeros&#40;n&#41;,
+    dual_sol_cpu::Vector&#123;rpdhg_float&#125; &#61; zeros&#40;m&#41;,
+    warm_start::Bool &#61; false,
+    max_outer_iter::Integer &#61; 10000,
+    max_inner_iter::Integer &#61; 500000,
+    abs_tol::rpdhg_float &#61; 1e-6,
+    rel_tol::rpdhg_float &#61; 1e-6,
+    eps_primal_infeasible_low_acc::rpdhg_float &#61; 1e-12,
+    eps_dual_infeasible_low_acc::rpdhg_float &#61; 1e-12,
+    eps_primal_infeasible_high_acc::rpdhg_float &#61; 1e-16,
+    eps_dual_infeasible_high_acc::rpdhg_float &#61; 1e-16,
+    print_freq::Integer &#61; 2000,
+    check_terminate_freq::Integer &#61; 2000,
+    verbose::Integer &#61; 1,
+    time_limit::Float64 &#61; Inf,
+    method::Symbol &#61; :average,
+    logfile_name::Union&#123;String, Nothing&#125; &#61; nothing,
+    use_kkt_restart::Bool &#61; false,
+    kkt_restart_freq::Integer &#61; 2000,
+    use_duality_gap_restart::Bool &#61; true,
+    duality_gap_restart_freq::Integer &#61; 2000&#41;</code></pre>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> Zhenwei Lin and Zikai Xiong. Last modified: May 22, 2025.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> Zhenwei Lin and Zikai Xiong. Last modified: May 23, 2025.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
