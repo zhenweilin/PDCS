@@ -2,20 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-    <loc>https://zhenweilin.github.io/PDCS/menu2/index.html</loc>
+    <loc>https://zhenweilin.github.io/PDCS/examples/index.html</loc>
     <lastmod>2025-05-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
 <url>
-    <loc>https://zhenweilin.github.io/PDCS/menu1/index.html</loc>
-    <lastmod>2025-05-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
-    <loc>https://zhenweilin.github.io/PDCS/menu3/index.html</loc>
+    <loc>https://zhenweilin.github.io/PDCS/algorithms/index.html</loc>
     <lastmod>2025-05-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://zhenweilin.github.io/PDCS/parameters/index.html</loc>
+    <lastmod>2025-05-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
